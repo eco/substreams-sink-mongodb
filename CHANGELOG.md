@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v2.1.0
+
+* Bump substreams to `v1.11.1`
+* Bump substreams-sink to `v0.5.0`
+
 ## v2.0.1
 
 ### Substreams Progress Messages
@@ -40,13 +45,13 @@ The errors coming from MongoDB are **not** retried anymore and will stop the bin
 
 ### Added
 
-- Added `--infinite-retry` to never exit on error and retry indefinitely instead.
+* Added `--infinite-retry` to never exit on error and retry indefinitely instead.
 
-- Added `--development-mode` to run in development mode.
+* Added `--development-mode` to run in development mode.
 
     > **Warning** You should use that flag for testing purposes, development mode drastically reduce performance you get from the server.
 
-- Added `--final-blocks-only` to only deal with final (irreversible) blocks.
+* Added `--final-blocks-only` to only deal with final (irreversible) blocks.
 
 ## v1.0.0
 
