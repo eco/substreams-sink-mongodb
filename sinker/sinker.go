@@ -187,11 +187,9 @@ func (s *MongoSinker) applyDatabaseChanges(ctx context.Context, block bstream.Bl
 				return fmt.Errorf("updating entity %s with id %s: %w (Block %s)", change.Table, id, err, block)
 			}
 		case pbdatabase.TableChange_DELETE:
-			for range change.Fields {
-				err := s.loader.Delete(ctx, change.Table, change.Pk)
-				if err != nil {
-					return fmt.Errorf("deleting entity %s with id %s: %w (Block %s)", change.Table, id, err, block)
-				}
+			err := s.loader.Delete(ctx, change.Table, id)
+			if err != nil {
+				return fmt.Errorf("deleting entity %s with id %s: %w (Block %s)", change.Table, id, err, block)
 			}
 		}
 	}
