@@ -100,7 +100,7 @@ func (l *Loader) Delete(ctx context.Context, collectionName string, id string) e
 	defer cancel()
 
 	collection := l.database.Collection(collectionName)
-	filter := bson.M{"id": id}
+	filter := bson.M{"_id": id}
 	res, err := collection.DeleteOne(ctx, filter)
 	if err != nil {
 		return err
