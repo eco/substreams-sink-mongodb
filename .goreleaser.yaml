@@ -86,16 +86,17 @@ release:
   name_template: '{{ .Tag }}'
   target_commitish: '{{ .Commit }}'
 
-brews:
-  - name: substreams-sink-mongodb
-    ids:
-    - substreams-sink-mongodb
-    tap:
-      owner: streamingfast
-      name: homebrew-tap
-    commit_author:
-      name: goreleaserbot
-      email: goreleaser@streamingfast.io
-    homepage: "https://github.com/streamingfast/substreams-sink-mongodb"
-    description: "StreamingFast CLI for 'substreams-sink-mongodb'"
-    license: "Apache-2.0"
+# Disabled: Don't publish to Homebrew tap
+# brews:
+#   - name: substreams-sink-mongodb
+#     ids:
+#     - substreams-sink-mongodb
+#     tap:
+#       owner: streamingfast
+#       name: homebrew-tap
+#     commit_author:
+#       name: goreleaserbot
+#       email: goreleaser@streamingfast.io
+#     homepage: "https://github.com/streamingfast/substreams-sink-mongodb"
+#     description: "StreamingFast CLI for 'substreams-sink-mongodb'"
+#     license: "Apache-2.0"
