@@ -69,8 +69,9 @@ func (l *Loader) Save(ctx context.Context, collectionName string, id string, ent
 		return err
 	}
 
-	if res.UpsertedCount == 0 {
-		return errors.New("no document inserted")
+	// Accept both inserts and updates
+	if res.UpsertedCount == 0 && res.ModifiedCount == 0 && res.MatchedCount == 0 {
+		return errors.New("no document inserted or updated")
 	}
 
 	return nil
