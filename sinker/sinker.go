@@ -110,7 +110,20 @@ func (s *MongoSinker) Run(ctx context.Context) {
 }
 
 func (s *MongoSinker) HandleBlockScopedData(ctx context.Context, data *pbsubstreamsrpc.BlockScopedData, isLive *bool, cursor *sink.Cursor) error {
+	// Output and Clock are optional message fields on the wire: a server that
+	// omits either would otherwise panic this handler on nil dereference.
+	if data == nil {
+		return fmt.Errorf("received nil block scoped data")
+	}
+
 	output := data.Output
+	if output == nil {
+		return fmt.Errorf("received block scoped data without an output module")
+	}
+
+	if data.Clock == nil {
+		return fmt.Errorf("received block scoped data without a clock")
+	}
 
 	if output.Name != s.OutputModuleName() {
 		return fmt.Errorf("received data from wrong output module, expected to received from %q but got module's output for %q", s.OutputModuleName(), output.Name)
@@ -193,13 +206,23 @@ func (s *MongoSinker) applyDatabaseChanges(ctx context.Context, block bstream.Bl
 							}
 							newValue = time.Unix(tempValue, 0)
 						case mongo.NULL:
+							// A bare `return` here returned the nil named `err`,
+							// which silently abandoned the remaining table
+							// changes for this block while the caller still
+							// advanced the cursor: permanent, invisible data
+							// loss. Surface the mismatch instead.
 							if field.NewValue != "" {
-								return
+								return fmt.Errorf("field %q of table %q is typed as null but carries value %q", field.Name, change.Table, field.NewValue)
 							}
 							newValue = nil
 						case mongo.DATE:
 							var tempValue time.Time
 							tempValue, err = time.Parse(time.RFC3339, field.NewValue)
+							// Unlike its sibling branches this one ignored the
+							// parse error and stored the zero time.
+							if err != nil {
+								return
+							}
 							newValue = tempValue
 						default:
 							// string
